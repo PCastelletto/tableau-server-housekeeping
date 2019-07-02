@@ -4,8 +4,6 @@
 # Variables:
 # Grab the current date in YYYY-MM-DD format
 DATE=`date +%Y-%m-%d`
-# Grab the current datetime for timestamping the log entries
-TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S'`
 # How many days to you want to keep archived log files for?
 log_days="2"
 # What do you want to name your logs file? (will automatically append current date to this filename)
@@ -29,6 +27,7 @@ load_environment_file() {
 }
 
 # Clean Logs
+TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S'`
 log_path=$(tsm configuration get -k basefilepath.log_archive -u $tsmuser -p $tsmpassword)
 echo $TIMESTAMP "The path for storing log archives is $log_path" 
 
@@ -45,12 +44,16 @@ if [ $lines -eq 0 ]; then
 fi
 
 # Archive Current Logs
+TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S'`
 echo $TIMESTAMP "Archiving current logs..."
 tsm maintenance ziplogs -a -t -o -f logs-$DATE.zip -u $tsmuser -p $tsmpassword
 
 # CleanUp older logs
+TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S'`
 echo $TIMESTAMP "Cleaning up Tableau Server..."
 tsm maintenance cleanup -a -u $tsmuser -p $tsmpassword
-echo "Restarting Tableau Server"
+TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S'`
+echo $TIMESTAMP "Restarting Tableau Server"
 tsm restart -u $tsmuser -p $tsmpassword
+TIMESTAMP=`date '+%Y-%m-%d %H:%M:%S'`
 echo $TIMESTAMP "Housekeeping completed"
